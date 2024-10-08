@@ -10,7 +10,7 @@ import java.util.*;
 public class HallOfFame {
 
     private List<PlayerProfile> profiles = new ArrayList<>();
-
+//test
     // ANSI escape codes for displaying colors
     private static final String RESET = "\u001B[0m";
     private static final String GREEN = "\u001B[32m";
