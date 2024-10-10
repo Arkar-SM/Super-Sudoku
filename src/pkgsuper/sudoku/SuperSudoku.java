@@ -1,29 +1,28 @@
-package pkgsuper.sudoku;
-
-/**
- * Main Class
- * Initialize Start Menu and Main Menu
- * Start by displaying the Start Menu.
- * 
- * @author Taha Bazyar
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
+package pkgsuper.sudoku;
+/**
+ *
+ * @author TahaBazyar
+ */
 import java.util.Scanner;
 
+/**
+ * Main Class to initialize the game.
+ * It starts by displaying the Start Menu.
+ */
 public class SuperSudoku {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in); // Create a Scanner object
+        ProfileManager profileManager = new ProfileManager(); // Manage profiles
 
-        // with a reference to MainMenu as null
-        StartMenu startMenu = new StartMenu(scanner, null);
-        
-        // Initialize MainMenu
-        MainMenu mainMenu = new MainMenu(startMenu);
+        StartMenu startMenu = new StartMenu(scanner, null, profileManager); // Initialize StartMenu
+        MainMenu mainMenu = new MainMenu(startMenu); // Initialize MainMenu
 
-        // link start menu with main menu
-        startMenu.setMainMenu(mainMenu);
+        startMenu.setMainMenu(mainMenu); // Link StartMenu with MainMenu
 
-        // display start menu , begin the game
-        startMenu.displayMenu();
+        startMenu.displayMenu(); // Start the game by displaying the StartMenu
     }
 }

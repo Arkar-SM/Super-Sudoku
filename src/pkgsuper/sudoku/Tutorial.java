@@ -5,11 +5,13 @@
 package pkgsuper.sudoku;
 /**
  *
- * @author Taha Bazyar
+ * @author TahaBazyar
  */
-
 import java.util.Scanner;
 
+/**
+ * Class for displaying the game tutorial.
+ */
 public class Tutorial {
     private Scanner scanner;
 
@@ -17,7 +19,7 @@ public class Tutorial {
         this.scanner = scanner;
     }
 
-    //display tutorial
+    // Display the tutorial
     public void displayTutorial() {
         while (true) {
             System.out.println("##########################################################################################################");
@@ -34,7 +36,7 @@ public class Tutorial {
             System.out.println("Easy Mode (45 Clues) \nNormal Mode(35 Clues) \nHard Mode(25 Clues)\n");
             System.out.println("Achievements:\n");
             System.out.println("All modes' results are recorded in your Profile and Hall of Fame.");
-            System.out.println("Top players are ranked by the shortest completion times \nRanked by Hard Mode , Normal Mode and Easy Mode accordingly!!");
+            System.out.println("Top players are ranked by the shortest completion times, ranked by Hard Mode, Normal Mode, and Easy Mode accordingly!");
             System.out.println("Give your best to beat the top players!\n");
             System.out.println("##########################################################################################################");
             System.out.println("\n\nEnter [x] to return to Main Menu");

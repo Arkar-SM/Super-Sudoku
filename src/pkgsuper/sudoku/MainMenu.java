@@ -1,23 +1,26 @@
 package pkgsuper.sudoku;
-
 /**
- * For displaying Main Menu
- * Its for Playing the game, Viewing Tutorial , Viewing their Profile, 
- * viewing Hall of Fame, or exit the game.
- * 
- * @author Taha Bazyar
+ *
+ * @author TahaBazyar
  */
+
+
 import java.util.Scanner;
 
+/**
+ * For displaying Main Menu.
+ * It offers playing the game, viewing the tutorial, viewing profiles, Hall of Fame, or exiting the game.
+ */
 public class MainMenu {
     private StartMenu startMenu; // Reference to the StartMenu
+    private ProfileManager profileManager = new ProfileManager(); // Managing profiles
 
-    // constructor for the MainMenu with a reference to the StartMenu
+    // Constructor for the MainMenu
     public MainMenu(StartMenu startMenu) {
         this.startMenu = startMenu;
     }
 
-    // Display the main menu options
+    // Display the Main Menu options
     public void displayMenu(Scanner scanner) {
         while (true) {
             System.out.println("\n--- Main Menu ---");
@@ -28,14 +31,12 @@ public class MainMenu {
             System.out.println("(5) Exit");
             System.out.println("Enter [x] to go back to the Start Menu");
 
-            // convert the input to lowercase for consistency
             String choice = scanner.nextLine().trim().toLowerCase();
 
-            // Handle the player's choice
             switch (choice) {
                 case "1":
-                    // Start the game, pass the scanner
-                    new PlayGame(scanner, StartMenu.currentPlayerName).startGame();
+                    // Start the game
+                    displayGameModes(scanner);
                     break;
                 case "2":
                     // Display the tutorial
@@ -44,9 +45,9 @@ public class MainMenu {
                 case "3":
                     // View the current player's profile
                     if (!StartMenu.currentPlayerName.isEmpty()) {
-                    new ViewProfile(scanner, this, startMenu).displayProfile(StartMenu.currentPlayerName);
+                        new ViewProfile(scanner, this, startMenu).displayProfile(StartMenu.currentPlayerName);
                     } else {
-                    System.out.println("No current player profile is loaded."); // handle the case where no player is loaded
+                        System.out.println("No current player profile is loaded.");
                     }
                     break;
                 case "4":
@@ -54,29 +55,49 @@ public class MainMenu {
                     new HallOfFame().displayHallOfFame(scanner);
                     break;
                 case "5":
-                    // Confirm exit 
-                    if (confirmExit(scanner)) {
+                    // Confirm exit
+                    if (Utils.confirmExit(scanner)) {
                         System.out.println("Exiting the game.");
                         System.exit(0);
                     }
                     break;
                 case "x":
-                    // return to start menu
+                    // Return to start menu
                     System.out.println("Returning to the Start Menu...");
-                    startMenu.displayMenu(); // start menu display method
-                    return; // Exit the main menu loop
+                    startMenu.displayMenu();
+                    return;
                 default:
-                    // Handle invalid input
                     System.out.println("Invalid input. Please select a valid option.");
                     break;
             }
         }
     }
 
-    //confirm exit
-    private static boolean confirmExit(Scanner scanner) {
-        System.out.println("\nAre you sure you want to exit? (Y/N)");
-        String response = scanner.nextLine().trim();
-        return response.equalsIgnoreCase("Y");
+    // Display and select game modes
+    private void displayGameModes(Scanner scanner) {
+        System.out.println("\nPlease choose your mode:");
+        System.out.println("(1) Easy");
+        System.out.println("(2) Normal");
+        System.out.println("(3) Hard");
+        System.out.println("(4) Test");
+
+        String modeInput = scanner.nextLine().trim().toLowerCase();
+        switch (modeInput) {
+            case "1":
+                new GameMode(scanner, GameMode.Difficulty.EASY).startGame();
+                break;
+            case "2":
+                new GameMode(scanner, GameMode.Difficulty.NORMAL).startGame();
+                break;
+            case "3":
+                new GameMode(scanner, GameMode.Difficulty.HARD).startGame();
+                break;
+            case "4":
+                new GameMode(scanner, GameMode.Difficulty.TEST).startGame();
+                break;
+            default:
+                System.out.println("Invalid input. Returning to Main Menu.");
+                break;
+        }
     }
 }
