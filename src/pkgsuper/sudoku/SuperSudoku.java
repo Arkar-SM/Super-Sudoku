@@ -1,4 +1,8 @@
 package pkgsuper.sudoku;
+import pkgsuper.sudoku.SudokuController;
+/**
+ * Author -Arkar
+ */
 
 /**
  * SuperSudoku - Main class to initialize the game.

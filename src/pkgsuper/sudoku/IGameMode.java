@@ -1,4 +1,7 @@
 package pkgsuper.sudoku;
+/**
+ * Author -Arkar
+ */
 
 /**
  * Interface defining the structure for game modes.

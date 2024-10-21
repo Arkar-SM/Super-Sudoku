@@ -1,6 +1,10 @@
 package pkgsuper.sudoku;
+/**
+ * Author -Arkar
+ */
 
 /**
+ * 
  * GameMode class - Manages different game difficulties.
  * Implements IGameMode interface.
  */

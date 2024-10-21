@@ -1,8 +1,4 @@
 package pkgsuper.sudoku;
-/**
- *
- * @author TahaBazyar
- */
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,31 +12,29 @@ public class StartMenuView extends JFrame {
     private JButton createProfileButton;
     private JButton enterNameButton;
     private JButton exitButton;
+    private StartMenuListener listener;
 
     // Constructor
-    public StartMenuView(ActionListener listener) {
-        initializeComponents(listener);
+    public StartMenuView(StartMenuListener listener) {
+        this.listener = listener;
+        initializeComponents();
         setupLayout();
     }
 
     // Initialize GUI components
-    private void initializeComponents(ActionListener listener) {
+    private void initializeComponents() {
         // Initialize buttons
         createProfileButton = new JButton("Create New Player");
         enterNameButton = new JButton("Enter Player Name");
         exitButton = new JButton("Exit");
 
         // Set action commands and listeners for the buttons
-        createProfileButton.setActionCommand("Create New Player");
-        enterNameButton.setActionCommand("Enter Player Name");
-        exitButton.setActionCommand("Exit");
-
-        createProfileButton.addActionListener(listener);
-        enterNameButton.addActionListener(listener);
-        exitButton.addActionListener(listener);
+        createProfileButton.addActionListener(e -> listener.onCreateProfile());
+        enterNameButton.addActionListener(e -> listener.onEnterPlayerName());
+        exitButton.addActionListener(e -> listener.onExit());
     }
 
-    // Setup the JFrame layout with only buttons (no input fields)
+    // Setup the JFrame layout
     private void setupLayout() {
         setTitle("Super Sudoku - Start Menu");
         setSize(400, 200);
@@ -65,16 +59,6 @@ public class StartMenuView extends JFrame {
         add(panel);
     }
 
-    // Show the start menu
-    public void showMenu() {
-        setVisible(true);
-    }
-
-    // Hide the start menu
-    public void closeMenu() {
-        setVisible(false);
-    }
-
     // Pop-up dialog for entering player name
     public String promptForPlayerName(String title) {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
@@ -88,7 +72,6 @@ public class StartMenuView extends JFrame {
         textPanel.add(playerNameField);
         panel.add(textPanel, BorderLayout.CENTER);
 
-        // Pop-up dialog with Enter and Back buttons
         int result = JOptionPane.showOptionDialog(this, panel, title,
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
                 null, new Object[]{"Enter", "Back"}, "Enter");
@@ -96,10 +79,18 @@ public class StartMenuView extends JFrame {
         if (result == JOptionPane.OK_OPTION) {
             return playerNameField.getText().trim();
         } else {
-            return null;  // Back button pressed or dialog canceled
+            return null;
         }
     }
 
+     public void showMenu() {
+        setVisible(true);
+    }
+
+    public void closeMenu() {
+        setVisible(false);
+    }
+    
     // Pop-up confirmation for exiting
     public boolean confirmExit() {
         int result = JOptionPane.showOptionDialog(this,
