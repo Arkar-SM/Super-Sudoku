@@ -1,27 +1,20 @@
 package pkgsuper.sudoku;
+
 import java.util.Random;
-/**
- *
- * @author Arkar
- */
 
 /**
- * Sudoku game board class that implements the IGameBoard interface.
- * Generates a complete Sudoku board and handles player interactions.
+ * GameBoard class - Manages the Sudoku board and player moves.
+ * Implements IGameBoard interface.
  */
-//test
 public class GameBoard implements IGameBoard {
-    private int[][] completedBoard = new int[9][9]; // Completed board
-    private int[][] playerBoard = new int[9][9];    // Player's board
-    private boolean[][] isClue = new boolean[9][9]; // Track clue positions
+    private int[][] completedBoard = new int[9][9];  // Completed board
+    private int[][] playerBoard = new int[9][9];     // Player's board
+    private boolean[][] isClue = new boolean[9][9];  // Track clue positions
 
-    private static final String RESET = "\u001B[0m"; // Reset color
-    private static final String BLUE = "\u001B[34m"; // Color for displaying clues
-
-    // Constructor to generate the boards
+    // Constructor to generate the boards with the given number of clues
     public GameBoard(int clues) {
         generateCompleteBoard();
-        generatePlayerBoard(clues);
+        generatePlayerBoard(clues);  // Call to generate the player's board
     }
 
     @Override
@@ -29,6 +22,26 @@ public class GameBoard implements IGameBoard {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 completedBoard[i][j] = (i * 3 + i / 3 + j) % 9 + 1;
+            }
+        }
+    }
+
+    // FIX: Changed this method to public to avoid the symbol not found error
+    public void generatePlayerBoard(int clues) {
+        Random random = new Random();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                playerBoard[i][j] = 0;
+                isClue[i][j] = false;
+            }
+        }
+        while (clues > 0) {
+            int row = random.nextInt(9);
+            int col = random.nextInt(9);
+            if (playerBoard[row][col] == 0) {
+                playerBoard[row][col] = completedBoard[row][col];
+                isClue[row][col] = true;
+                clues--;
             }
         }
     }
@@ -47,7 +60,7 @@ public class GameBoard implements IGameBoard {
                     System.out.print("| ");
                 }
                 if (isClue[i][j]) {
-                    System.out.print(BLUE + playerBoard[i][j] + RESET + "  ");
+                    System.out.print(playerBoard[i][j] + "  ");
                 } else if (playerBoard[i][j] == 0) {
                     System.out.print("0  ");
                 } else {
@@ -60,11 +73,6 @@ public class GameBoard implements IGameBoard {
 
     @Override
     public boolean makeMove(String move) {
-        if (!Utils.validateMoveFormat(move)) {
-            System.out.println("##Invalid input format##");
-            return false;
-        }
-
         int col = move.charAt(0) - 'a';
         int row = move.charAt(1) - '1';
         int number = Character.getNumericValue(move.charAt(3));
@@ -90,23 +98,8 @@ public class GameBoard implements IGameBoard {
         return true;
     }
 
-    // Helper method to generate the playable board with the given number of clues
-    private void generatePlayerBoard(int clues) {
-        Random random = new Random();
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                playerBoard[i][j] = 0;
-                isClue[i][j] = false;
-            }
-        }
-        while (clues > 0) {
-            int row = random.nextInt(9);
-            int col = random.nextInt(9);
-            if (playerBoard[row][col] == 0) {
-                playerBoard[row][col] = completedBoard[row][col];
-                isClue[row][col] = true;
-                clues--;
-            }
-        }
+    @Override
+    public int[][] getPlayerBoard() {
+        return playerBoard;
     }
 }

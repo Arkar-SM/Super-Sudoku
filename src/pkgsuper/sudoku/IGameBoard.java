@@ -1,15 +1,13 @@
 package pkgsuper.sudoku;
-/**
- *
- * @author Arkar
- */
 
 /**
  * Interface defining the essential methods for a Sudoku game board.
  */
 public interface IGameBoard {
-    void generateCompleteBoard();  // Method to generate the complete board
-    boolean makeMove(String move); // Method to process player moves
-    boolean isComplete();          // Method to check if the board is complete
-    void displayBoard(String elapsedTime); // Method to display the board with time
+    void generateCompleteBoard();       // Generate the complete board.
+    void generatePlayerBoard(int clues); // Generate a playable board with clues.
+    boolean makeMove(String move);      // Process player moves.
+    boolean isComplete();               // Check if the board is complete.
+    void displayBoard(String elapsedTime); // Display the board with elapsed time.
+    int[][] getPlayerBoard();           // Expose the current state of the player’s board.
 }

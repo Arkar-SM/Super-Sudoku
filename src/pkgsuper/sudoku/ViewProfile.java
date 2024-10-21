@@ -1,80 +1,91 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pkgsuper.sudoku;
 /**
- *
- * @author Arkar
+ * Author -Arkar
  */
 
+import javax.swing.*;
 import java.io.*;
-import java.util.Scanner;
 
 /**
- * Class for viewing and managing the current player profile.
+ * Class for viewing and managing the current player profile in the GUI.
  */
 public class ViewProfile {
-    private Scanner scanner;
-    private MainMenu mainMenu;
-    private StartMenu startMenu;
 
-    public ViewProfile(Scanner scanner, MainMenu mainMenu, StartMenu startMenu) {
-        this.scanner = scanner;
-        this.mainMenu = mainMenu;
-        this.startMenu = startMenu;
-    }
-
-    // View and manage the current player profile
+    // View and manage the current player profile using GUI
     public void displayProfile(String playerName) {
         File file = new File("./resources/" + playerName + "_profile.txt");
         if (file.exists()) {
-            System.out.println("\n--- Player Profile ---");
+            StringBuilder profileContent = new StringBuilder();
+
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
+                    profileContent.append(line).append("\n");
                 }
             } catch (IOException e) {
-                System.err.println("Error reading the profile file: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Error reading the profile file: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-        } else {
-            System.out.println("Profile for '" + playerName + "' does not exist.");
-            return; // Exit if profile doesn't exist
-        }
 
-        System.out.println("\nEnter [x] to return to Main Menu                Enter [d] to Delete Profile");
-        handleProfile(playerName, file);
+            // Show profile content in a message dialog
+            JOptionPane.showMessageDialog(null, profileContent.toString(),
+                    "Player Profile: " + playerName, JOptionPane.INFORMATION_MESSAGE);
+
+            // Ask the user if they want to return to the main menu or delete the profile
+            handleProfile(playerName, file);
+        } else {
+            JOptionPane.showMessageDialog(null, "Profile for '" + playerName + "' does not exist.",
+                    "Profile Not Found", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     // Handle the input for viewing or deleting the profile
     private void handleProfile(String playerName, File file) {
-        String input = scanner.nextLine().trim().toLowerCase();
-        if (input.equals("x")) {
-            mainMenu.displayMenu(scanner);  // Go back to Main Menu
-        } else if (input.equals("d")) {
+        Object[] options = {"Return to Main Menu", "Delete Profile"};
+        int choice = JOptionPane.showOptionDialog(null,
+                "What would you like to do?",
+                "Manage Profile",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null, options, options[0]);
+
+        if (choice == 0) {
+            // Return to main menu
+            returnToMainMenu();
+        } else if (choice == 1) {
+            // Confirm and delete profile
             deleteProfile(playerName, file);
-        } else {
-            System.out.println("Please enter [x] to exit or [d] to delete the profile.");
-            handleProfile(playerName, file);  // Recurse until valid input is provided
         }
     }
 
-    // Validate and delete profile, then return to the Start Menu
+    // Validate and delete profile, then return to the main menu
     private void deleteProfile(String playerName, File file) {
-        System.out.println("Are you sure you want to delete your profile? All your scores will be lost! (Y/N)");
-        String response = scanner.nextLine().trim().toUpperCase();
-        if (response.equals("Y")) {
+        int confirmation = JOptionPane.showConfirmDialog(null,
+                "Are you sure you want to delete your profile? All your scores will be lost!",
+                "Confirm Deletion",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirmation == JOptionPane.YES_OPTION) {
             if (file.delete()) {
-                System.out.println("Profile Deleted! Going back to Start Menu...");
-                startMenu.displayMenu();  // Return to Start Menu after deletion
+                JOptionPane.showMessageDialog(null, "Profile Deleted! Returning to Main Menu...",
+                        "Profile Deleted", JOptionPane.INFORMATION_MESSAGE);
+                returnToMainMenu();
             } else {
-                System.out.println("Failed to delete the profile. Please try again.");
+                JOptionPane.showMessageDialog(null, "Failed to delete the profile. Please try again.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
                 displayProfile(playerName);  // Redisplay profile options if deletion fails
             }
         } else {
-            System.out.println("Profile deletion canceled.");
+            // User canceled the deletion
             displayProfile(playerName);  // Redisplay profile
         }
+    }
+
+    // Placeholder for returning to the main menu, you can link this to your actual main menu in the GUI
+    private void returnToMainMenu() {
+        // Implement returning to your main menu view
+        JOptionPane.showMessageDialog(null, "Returning to Main Menu...",
+                "Main Menu", JOptionPane.INFORMATION_MESSAGE);
     }
 }

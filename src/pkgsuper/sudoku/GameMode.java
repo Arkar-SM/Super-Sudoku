@@ -1,17 +1,11 @@
 package pkgsuper.sudoku;
-/**
- *
- * @author Arkar
- */
-
-import java.util.Scanner;
-
 
 /**
- * Class for different game modes that uses an enum to represent difficulty levels.
+ * GameMode class - Manages different game difficulties.
+ * Implements IGameMode interface.
  */
 public class GameMode implements IGameMode {
-    
+
     // Enum to represent difficulty levels
     public enum Difficulty {
         EASY(45, "Easy"), 
@@ -36,30 +30,27 @@ public class GameMode implements IGameMode {
         }
     }
 
-    private Scanner scanner;
     private Difficulty difficulty;
 
-    // Constructor to initialize the game mode with the desired difficulty
-    public GameMode(Scanner scanner, Difficulty difficulty) {
-        this.scanner = scanner;
+    // Constructor to initialize the game mode with a difficulty
+    public GameMode(Difficulty difficulty) {
         this.difficulty = difficulty;
     }
 
-    // Starts the game based on the selected difficulty
+    // Implement the startGame method to fulfill the IGameMode interface contract
     @Override
     public void startGame() {
-        System.out.println("Starting " + difficulty.getName() + " Mode...");
-        PlayGame playGame = new PlayGame(scanner, StartMenu.currentPlayerName, new ProfileManager());
-        playGame.startGame(this);
+        System.out.println("Starting " + difficulty.getName() + " mode with " + getClues() + " clues.");
+        // You can add more game initialization logic here if needed
     }
 
-    // Returns the number of clues based on the difficulty
+    // Return the number of clues for the game mode
     @Override
     public int getClues() {
         return difficulty.getClues();
     }
 
-    // Returns the difficulty name
+    // Return the name of the selected difficulty
     @Override
     public String getDifficultyName() {
         return difficulty.getName();
