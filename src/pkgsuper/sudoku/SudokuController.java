@@ -9,14 +9,14 @@ public class SudokuController implements MainMenuListener, StartMenuListener, Ac
     private StartMenuView startMenuView;
     private GameBoardView gameBoardView;
     private TutorialView tutorialView;
-    private ProfileManager profileManager;
+    private Database database;  // Using Database for profile management
     private GameBoardModel gameBoardModel;
 
     private String currentPlayerName;
     private GameMode currentGameMode;
 
     public SudokuController() {
-        profileManager = new ProfileManager();
+        database = Database.getInstance();  // Use singleton instance of the Database
         mainMenuView = new MainMenuView(this);  // Using MainMenuListener
         startMenuView = new StartMenuView(this);  // Using StartMenuListener
         tutorialView = new TutorialView(this);
@@ -54,7 +54,6 @@ public class SudokuController implements MainMenuListener, StartMenuListener, Ac
         }
     }
 
- 
     // Implement methods from MainMenuListener
     @Override
     public void onPlayGame() {
@@ -73,14 +72,13 @@ public class SudokuController implements MainMenuListener, StartMenuListener, Ac
 
     @Override
     public void onExit() {
-    // Use JOptionPane to confirm if the user really wants to exit
+        // Use JOptionPane to confirm if the user really wants to exit
         int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", 
                                                 "Exit Confirmation", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-        System.exit(0);  // Exit the program if YES is selected
+            System.exit(0);  // Exit the program if YES is selected
         }
     }
-
 
     // Implement methods from StartMenuListener
     @Override
@@ -98,10 +96,10 @@ public class SudokuController implements MainMenuListener, StartMenuListener, Ac
         return startMenuView.confirmExit();
     }
 
-   @Override
+    @Override
     public void onStartMenu() {
-    mainMenuView.closeMenu();  // Hide the Main Menu
-    startMenuView.showMenu();  // Show the existing Start Menu
+        mainMenuView.closeMenu();  // Hide the Main Menu
+        startMenuView.showMenu();  // Show the existing Start Menu
     }
 
     private void selectGameMode() {
@@ -149,7 +147,8 @@ public class SudokuController implements MainMenuListener, StartMenuListener, Ac
         String playerName = startMenuView.promptForPlayerName("Create New Player");
 
         if (playerName != null && !playerName.isEmpty()) {
-            if (profileManager.createProfile(playerName)) {
+            if (!database.doesProfileExist(playerName)) {
+                database.createProfile(playerName);
                 currentPlayerName = playerName;
                 JOptionPane.showMessageDialog(startMenuView, "Profile created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 switchToMainMenu();
@@ -163,7 +162,7 @@ public class SudokuController implements MainMenuListener, StartMenuListener, Ac
         String playerName = startMenuView.promptForPlayerName("Enter Player Name");
 
         if (playerName != null && !playerName.isEmpty()) {
-            if (profileManager.validateProfile(playerName)) {
+            if (database.doesProfileExist(playerName)) {
                 currentPlayerName = playerName;
                 JOptionPane.showMessageDialog(startMenuView, "Welcome back, " + playerName + "!", "Welcome", JOptionPane.INFORMATION_MESSAGE);
                 switchToMainMenu();
